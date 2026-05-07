@@ -3,40 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamca Alfabesi Çevirici v2.0</title>
+    <title>Kamca Alfabesi Çevirici v3.5 - GitHub Elite</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         :root {
-            --ana-renk: #2c3e50;
-            --vurgu-renk: #d35400;
-            --kagit-renk: #fdfcf0;
+            --vurgu: #d35400; /* Meşhur turuncu */
+            --arka-plan: #121212;
+            --kart-plan: #1e1e1e;
+            --kagit: #fdfcf0; /* Parşömen rengi */
         }
 
         body { 
-            background-color: #121212; 
+            background-color: var(--arka-plan); 
             color: #ecf0f1; 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .main-card {
-            background: #1e1e1e;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            background: var(--kart-plan);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
+            border: 1px solid #333;
         }
 
         h1 { 
             text-align: center; 
-            color: var(--vurgu-renk);
-            letter-spacing: 5px;
+            color: var(--vurgu);
+            letter-spacing: 10px;
             text-transform: uppercase;
             margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         textarea { 
@@ -44,64 +52,94 @@
             height: 120px; 
             background: #2d2d2d;
             color: #fff;
-            border: 2px solid var(--ana-renk);
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 18px;
+            border: 2px solid #3d3d3d;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 20px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
             margin-bottom: 25px;
-        }
-
-        textarea:focus {
+            resize: none;
             outline: none;
-            border-color: var(--vurgu-renk);
+            transition: all 0.3s;
         }
 
-        /* ÇIKTI ALANI (KAĞIT EFEKTİ) */
+        textarea:focus { border-color: var(--vurgu); background: #333; }
+
+        #paylasBtn {
+            width: 100%;
+            background-color: var(--vurgu);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 35px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(211, 84, 0, 0.3);
+        }
+
+        #paylasBtn:hover { background-color: #e67e22; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(211, 84, 0, 0.5); }
+        #paylasBtn:disabled { background-color: #444; cursor: not-allowed; }
+
+        /* ÇIKTI ALANI - GİTHUB TEMASI */
         #cikti-paneli {
-            background-color: var(--kagit-renk);
-            border-radius: 8px;
-            padding: 40px;
-            min-height: 200px;
+            background-color: var(--kagit);
+            border-radius: 15px;
+            padding: 60px; /* Daha ferah kenar boşluğu */
+            min-height: 250px;
             display: flex;
             flex-wrap: wrap;
             align-content: flex-start;
-            gap: 15px; /* Kelimeler arası boşluk */
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
-            overflow-x: hidden; /* Dışarı taşmayı engeller */
+            /* KELİMELER ARASI BOŞLUK - GİTHUB GİBİ GENİŞ */
+            gap: 80px; 
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 1px solid #ddd;
         }
 
-        /* KELİME GRUPLAMASI */
         .kelime-kutusu {
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
-            padding: 5px;
-            /* Kelimelerin bölünmemesi için: */
-            page-break-inside: avoid;
-            break-inside: avoid;
         }
 
-        /* HARF RESİMLERİ */
         .kamca-harf {
-            height: 55px; /* Boyutu buradan ayarla (60-70 idealdir) */
+            height: 70px; /* Harfler bir tık daha iri */
             width: auto;
-            margin: 0 1px; /* Harfler arası çok küçük boşluk */
-            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));
+            margin: 0 2px;
+            filter: contrast(1.1) brightness(0.9);
         }
 
         .bilinmeyen {
-            font-size: 30px;
-            color: #333;
+            font-size: 40px;
+            color: #2c3e50;
+            margin: 0 8px;
             font-weight: bold;
-            margin: 0 5px;
+        }
+
+        #onizleme-alani {
+            margin-top: 40px;
+            padding: 30px;
+            border-top: 2px solid #333;
+            text-align: center;
+            display: none;
+        }
+
+        #onizleme-alani img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 5px solid var(--vurgu);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            opacity: 0.5;
+            margin-top: 30px;
+            font-size: 13px;
+            opacity: 0.3;
+            letter-spacing: 2px;
             text-align: center;
         }
     </style>
@@ -109,97 +147,128 @@
 <body>
 
     <div class="main-card">
-        <h1>ᛕAMCA Alfabesi</h1>
+        <h1>KAMCA ALFABESİ</h1>
         
-        <textarea id="metinGiris" oninput="temizCevir()" placeholder="Buraya gizli mesajınızı yazın..."></textarea>
+        <textarea id="metinGiris" oninput="kamcayaCevir()" placeholder="Mesajınızı buraya dökün..."></textarea>
         
+        <button id="paylasBtn" onclick="resimKaydet()">📸 MESAJI RESİM OLARAK İNDİR</button>
+
         <div id="cikti-paneli">
             </div>
 
-        <div class="footer">
-            9000x12000px Master Kaynak Kullanılıyor | Kamca Encryption System
+        <div id="onizleme-alani">
+            <p style="color: #2ecc71; font-weight: bold; margin-bottom: 15px;">✅ RESİM OLUŞTURULDU!</p>
+            <div id="resimSonuc"></div>
+            <p style="font-size: 12px; margin-top: 10px; opacity: 0.7;">İndirme başlamadıysa resme basılı tutup kaydedin.</p>
         </div>
     </div>
 
+    <div class="footer">
+        KAMCA ENCRYPTION SYSTEM | v3.5 GITHUB ELITE
+    </div>
+
     <script>
-        function temizCevir() {
+        function kamcayaCevir() {
             const metin = document.getElementById('metinGiris').value;
             const cikti = document.getElementById('cikti-paneli');
             cikti.innerHTML = ''; 
+            document.getElementById('onizleme-alani').style.display = 'none';
 
             if(!metin.trim()) return;
 
-            // Kelimelere böl
             const kelimeler = metin.split(/\s+/);
-
             kelimeler.forEach(kelime => {
                 const kelimeDiv = document.createElement('div');
                 kelimeDiv.className = 'kelime-kutusu';
 
                 for (let harf of kelime) {
-                    let dosya = getDosyaAdi(harf);
-                    
+                    let dosya = getHarfDosyasi(harf);
                     if (dosya) {
                         const img = document.createElement('img');
-                        img.src = dosya;
+                        // Cache sorununu önlemek için
+                        img.src = dosya + "?v=" + Math.random();
                         img.className = 'kamca-harf';
-                        // Resim yüklenemezse (dosya yoksa) harfin kendisini yaz
                         img.onerror = function() {
                             this.style.display = 'none';
-                            const span = document.createElement('span');
-                            span.innerText = harf;
-                            span.className = 'bilinmeyen';
-                            kelimeDiv.appendChild(span);
+                            ekleNormal(kelimeDiv, harf);
                         };
                         kelimeDiv.appendChild(img);
                     } else {
-                        const span = document.createElement('span');
-                        span.innerText = harf;
-                        span.className = 'bilinmeyen';
-                        kelimeDiv.appendChild(span);
+                        ekleNormal(kelimeDiv, harf);
                     }
                 }
                 cikti.appendChild(kelimeDiv);
             });
         }
 
-        function getDosyaAdi(h) {
-            // Senin klasöründeki tam dosya isimlerine göre eşleştirme
+        function ekleNormal(div, h) {
+            const span = document.createElement('span');
+            span.innerText = h;
+            span.className = 'bilinmeyen';
+            div.appendChild(span);
+        }
+
+        function getHarfDosyasi(h) {
             const map = {
-                'a': 'a.png', 'A': 'a.png',
-                'b': 'b.PNG', 'B': 'b.PNG',
-                'c': 'c.PNG', 'C': 'c.PNG',
-                'ç': 'c-alt.PNG', 'Ç': 'c-alt.PNG',
-                'd': 'd.PNG', 'D': 'd.PNG',
-                'e': 'e.PNG', 'E': 'e.PNG',
-                'f': 'f.PNG', 'F': 'f.PNG',
-                'g': 'g.PNG', 'G': 'g.PNG',
-                'ğ': 'g-alt.PNG', 'Ğ': 'g-alt.PNG',
-                'h': 'h.PNG', 'H': 'h.PNG',
-                'ı': 'ı.PNG', 'I': 'ı.PNG', // Noktasız I -> ok işareti (i.PNG)
-                'i': 'i.png', 'İ': 'i.png', // Noktalı İ -> noktalı ok (i.png)
-                'j': 'j.PNG', 'J': 'j.PNG',
-                'k': 'k.PNG', 'K': 'k.PNG',
-                'l': 'l.PNG', 'L': 'l.PNG',
-                'm': 'm.PNG', 'M': 'm.PNG',
-                'n': 'n.PNG', 'N': 'n.PNG',
-                'o': 'o.PNG', 'O': 'o.PNG',
-                'ö': 'o-alt.PNG', 'Ö': 'o-alt.PNG',
-                'p': 'p.PNG', 'P': 'p.PNG',
-                'r': 'r.PNG', 'R': 'r.PNG',
-                's': 's.PNG', 'S': 's.PNG',
-                'ş': 's-alt.PNG', 'Ş': 's-alt.PNG',
-                't': 't.PNG', 'T': 't.PNG',
-                'u': 'u.PNG', 'U': 'u.PNG',
-                'ü': 'u-alt.PNG', 'Ü': 'u-alt.PNG',
-                'v': 'v.PNG', 'V': 'v.PNG',
-                'y': 'y.PNG', 'Y': 'y.PNG',
-                'z': 'z.PNG', 'Z': 'z.PNG',
-                'x': 'x.PNG', 'X': 'x.PNG',
-                'q': 'q.PNG', 'Q': 'q.PNG',
-                'w': 'w.PNG', 'W': 'w.PNG'
+                'a': 'a.png', 'A': 'a.png', 'b': 'b.PNG', 'B': 'b.PNG', 'c': 'c.PNG', 'C': 'c.PNG',
+                'ç': 'c-alt.PNG', 'Ç': 'c-alt.PNG', 'd': 'd.PNG', 'D': 'd.PNG', 'e': 'e.PNG', 'E': 'e.PNG',
+                'f': 'f.PNG', 'F': 'f.PNG', 'g': 'g.PNG', 'G': 'g.PNG', 'ğ': 'g-alt.PNG', 'Ğ': 'g-alt.PNG',
+                'h': 'h.PNG', 'H': 'h.PNG', 'ı': 'i.PNG', 'I': 'i.PNG', 'i': 'i.png', 'İ': 'i.png',
+                'j': 'j.PNG', 'J': 'j.PNG', 'k': 'k.PNG', 'K': 'k.PNG', 'l': 'l.PNG', 'L': 'l.PNG',
+                'm': 'm.PNG', 'M': 'm.PNG', 'n': 'n.PNG', 'N': 'n.PNG', 'o': 'o.PNG', 'O': 'o.PNG',
+                'ö': 'o-alt.PNG', 'Ö': 'o-alt.PNG', 'p': 'p.PNG', 'P': 'p.PNG', 'r': 'r.PNG', 'R': 'r.PNG',
+                's': 's.PNG', 'S': 's.PNG', 'ş': 's-alt.PNG', 'Ş': 's-alt.PNG', 't': 't.PNG', 'T': 't.PNG',
+                'u': 'u.PNG', 'U': 'u.PNG', 'ü': 'u-alt.PNG', 'Ü': 'u-alt.PNG', 'v': 'v.PNG', 'V': 'v.PNG',
+                'y': 'y.PNG', 'Y': 'y.PNG', 'z': 'z.PNG', 'Z': 'z.PNG', 'x': 'x.PNG', 'X': 'x.PNG',
+                'q': 'q.PNG', 'Q': 'q.PNG', 'w': 'w.PNG', 'W': 'w.PNG'
             };
             return map[h] || null;
+        }
+
+        async function resimKaydet() {
+            const panel = document.getElementById('cikti-paneli');
+            const buton = document.getElementById('paylasBtn');
+            const sonucDiv = document.getElementById('resimSonuc');
+            const area = document.getElementById('onizleme-alani');
+
+            if(!document.getElementById('metinGiris').value.trim()) return;
+
+            buton.innerText = "⏳ KAMCA PARŞÖMENİ HAZIRLANIYOR...";
+            buton.disabled = true;
+
+            // Render bekleme süresi
+            await new Promise(r => setTimeout(r, 700));
+
+            html2canvas(panel, {
+                backgroundColor: "#fdfcf0",
+                scale: 2,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                
+                // İndirme tetikleyici
+                const link = document.createElement('a');
+                link.download = 'kamca-mesaj-elite.png';
+                link.href = imgData;
+                link.click();
+
+                // Önizleme
+                sonucDiv.innerHTML = `<img src="${imgData}">`;
+                area.style.display = 'block';
+
+                buton.innerText = "✅ BAŞARIYLA İNDİRİLDİ";
+                setTimeout(() => {
+                    buton.innerText = "📸 MESAJI RESİM OLARAK İNDİR";
+                    buton.disabled = false;
+                }, 2000);
+
+            }).catch(err => {
+                console.error(err);
+                alert("HATA: Lütfen bu siteyi GitHub linkiniz üzerinden açın!");
+                buton.disabled = false;
+                buton.innerText = "📸 MESAJI RESİM OLARAK İNDİR";
+            });
         }
     </script>
 </body>
